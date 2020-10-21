@@ -1,0 +1,65 @@
+---
+title: "Outlier influence on a simple linear model"
+author: "Christos Tsolkas"
+date: "October 21, 2020"
+output: ioslides_presentation
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Application description 
+
+  - The applications features a scatter plot with a fitted simple linear model.
+  
+  - At the side there is also the resulting residuals plot.
+
+  - Right below there is a control panel for fixing the outlier position.
+
+  - Finally at the bottom influence measures tables are shown that measure the influence the outlier has on the fitted model in comparison to normal points. 
+
+## Example scatter plot
+
+
+```{r echo=FALSE}
+defaultW <- getOption("warn") 
+
+options(warn = -1) 
+
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(plotly))
+outlier.x = 10
+outlier.y = -3
+npoints <- 100
+set.seed(100)
+x <- runif(npoints, min = -2, max = 2)
+y <- x + rnorm(npoints, mean = 0, sd = 0.3)
+df <- data.frame( x = c(x, outlier.x),
+                  y = c(y, outlier.y),
+                  Point = c(rep("Normal point", npoints), "Outlier point")
+)
+
+g1 <- ggplot(df, aes(x, y, col = Point)) +
+  geom_point(size = 4, alpha = .4) +
+  expand_limits(x = c(-4, 11), y = c(-4, 11)) +
+  geom_smooth(method = "lm", formula = y ~ x,  se = FALSE, col = "deeppink") +
+  theme_light() +
+  theme(legend.position="bottom", legend.title = element_blank())
+
+ggplotly(g1)
+
+options(warn = defaultW)
+```
+
+## Idea for this app came from Residuals and Diagnostics video
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VohfwSJuG4k?start=94" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Give it a try and have fun
+
+The application can be accessed at: [https://chrtsolkas.shinyapps.io/LinearModelDiagnostics/](https://chrtsolkas.shinyapps.io/LinearModelDiagnostics/)
+
+
